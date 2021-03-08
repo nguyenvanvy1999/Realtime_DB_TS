@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import Config from '../config/index';
-import { IUserDocument, Gender } from '../interfaces/user';
+import Config from '../configs/index';
+import { IUserDocument, Gender } from '../interfaces/user.interface';
 
 const salt: number = parseInt(Config.get('salt'), 10);
 
@@ -37,7 +37,7 @@ UserSchema.pre('save', async function (this: IUser, next) {
 	next();
 });
 
-UserSchema.pre('remove', async function (next) {
+UserSchema.pre('remove', async function (next): Promise<void> {
 	const user = this;
 	user.model('Data').deleteMany({ user: this._id });
 	next();
@@ -55,5 +55,5 @@ UserSchema.statics.hashPassword = function hashPassword(password: string): strin
 	return bcrypt.hashSync(password, salt);
 };
 
-export const User: IUserModel = model<IUser, IUserModel>('User', UserSchema);
+const User: IUserModel = model<IUser, IUserModel>('User', UserSchema);
 export default User;
