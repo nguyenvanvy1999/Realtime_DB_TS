@@ -1,10 +1,19 @@
-import express from 'express';
-import UserController from '../controllers/user.controller';
+import { Router } from 'express';
+import UsersController from '../controllers/user.controller';
+import Route from '../interfaces/route.interface';
 import multer from 'multer';
-const route = express.Router();
 
-export default () => {
-	route.use(multer().none());
-	route.post('/signup', UserController.newUser);
-	return route;
-};
+class UsersRoute implements Route {
+	public path = '/users';
+	public router = Router();
+	constructor() {
+		this.initializeRoutes();
+	}
+
+	private initializeRoutes() {
+		this.router.use(multer().none());
+		this.router.post(`${this.path}/signup`, UsersController.newUser);
+	}
+}
+
+export default new UsersRoute();
