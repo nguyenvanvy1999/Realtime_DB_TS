@@ -1,6 +1,7 @@
 import Config from './index';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { logger } from '../utils/logger';
 
 const uri = Config.get('mongo_uri');
 const debug = Config.isDebug();
@@ -31,19 +32,21 @@ class Mongo {
 				const mongo = new MongoMemoryServer();
 				const testUri = await mongo.getUri();
 				await mongoose.connect(testUri, this.setting);
-				return console.log(`Connected Test DB ! `);
+				return logger.info('🟢 Connected to Test DB');
 			}
 			await mongoose.connect(this.uri, this.setting);
-			return console.log(`Connected DB !`);
+			return logger.info('🟢 Connected to DB');
 		} catch (error) {
+			logger.error(`🔴 Unable to connect to DB: ${error}.`);
 			throw new Error(error);
 		}
 	}
 	async close() {
 		try {
 			await mongoose.connection.close();
-			return console.log(`Disconnected DB !`);
+			return logger.info('🟢 Disconnected to DB');
 		} catch (error) {
+			logger.error(`🔴 Unable to disconnect to DB: ${error}.`);
 			throw new Error(error);
 		}
 	}
@@ -55,7 +58,9 @@ class Mongo {
 				const collection = collections[key];
 				await collection.deleteMany({});
 			}
+			logger.info('🟢 Clear DB');
 		} catch (error) {
+			logger.error(`🔴 Unable to clear  DB: ${error}.`);
 			throw new Error(error);
 		}
 	}

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Config from '../configs/index';
-import { IUserDocument, Gender } from '../interfaces/user.interface';
+import { IUserDocument, Gender, Role } from '../interfaces/user.interface';
 
 const salt: number = parseInt(Config.get('salt'), 10);
 
@@ -15,10 +15,11 @@ export interface IUserModel extends Model<IUser> {
 }
 
 const UserSchema: Schema = new Schema({
+	_id: Schema.Types.ObjectId,
 	email: { type: String, required: true, unique: true, lowercase: true },
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
-	gender: { type: String, enum: Object.values(Gender), default: 'undisclosed' },
+	gender: { type: String, enum: Object.values(Gender), default: Gender.undisclosed },
 	address: {
 		street: { type: String },
 		city: { type: String },
@@ -26,7 +27,7 @@ const UserSchema: Schema = new Schema({
 	},
 	password: { type: String, min: 4 },
 	isActive: { type: Boolean, default: false },
-	role: { type: String, enum: ['User', 'Admin'], default: 'User' },
+	role: { type: String, enum: Object.values(Role), default: Role.user },
 });
 
 UserSchema.pre('save', async function (this: IUser, next) {
