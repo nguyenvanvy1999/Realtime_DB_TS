@@ -1,26 +1,7 @@
-import express from 'express';
-import Config from './configs/index';
-import Mongo from './configs/mongo';
-import UserRoutes from './routes/user.route';
-const port = Config.get('port');
-const userRotes = UserRoutes();
+import 'dotenv/config';
+import App from './app';
+import UserRoute from './routes/user.route';
+import IndexRoute from './routes/index.route';
+const app = new App([UserRoute, IndexRoute]);
 
-export class Server {
-	async startServer() {
-		try {
-			await Mongo.connect();
-			const app = express();
-			app.use(express.json());
-			app.use(express.urlencoded({ extended: true }));
-			app.use('/user', userRotes);
-			app.listen(port, () => {
-				console.log('app listen in ', port);
-			});
-		} catch (error) {
-			throw new Error(error);
-		}
-	}
-}
-
-const server = new Server();
-server.startServer();
+app.listen();
