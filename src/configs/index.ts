@@ -1,6 +1,7 @@
 import { parse } from 'dotenv';
 import * as joi from 'joi';
 import * as fs from 'fs';
+import { logger } from '../utils/logger';
 
 /**
  * Key-value mapping
@@ -64,6 +65,7 @@ class ConfigService {
 		 */
 		const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig);
 		if (error) {
+			logger.error(error);
 			throw new Error(`Config validation error: ${error.message}`);
 		}
 		return validatedEnvConfig;

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import UserService from '../services/user.service';
 
 class UserController {
-	async newUser(req: Request, res: Response, next: NextFunction): Promise<any> {
+	public newUser = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const user = UserService.newUser(req.body);
 			const result = await UserService.insert(user);
@@ -11,7 +11,7 @@ class UserController {
 		} catch (error) {
 			next(error);
 		}
-	}
+	};
 }
 
 export default new UserController();
