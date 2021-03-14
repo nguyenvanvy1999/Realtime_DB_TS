@@ -15,7 +15,7 @@ const errorMiddleware = (error: HttpException, req: Request, res: Response, next
 };
 
 const handleNotFoundPage = (req: Request, res: Response) => {
-	return res.status(404).json({ message: `${req.url} not found` });
+	return res.status(404).json({ message: `${req.method}${req.url} not found` });
 };
 
 export { errorMiddleware, handleNotFoundPage };

@@ -28,6 +28,29 @@ class UserService {
 			throw new HttpException(400, error.message);
 		}
 	}
+
+	public async findAllUser(): Promise<IUserDocument[]> {
+		try {
+			return await User.find({});
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+
+	public async findUser(_id: string): Promise<IUserDocument> {
+		try {
+			return await User.findById(_id);
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async findUserByEmail(email: string): Promise<IUserDocument> {
+		try {
+			return await User.findOne({ email });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
 }
 
 export default new UserService();

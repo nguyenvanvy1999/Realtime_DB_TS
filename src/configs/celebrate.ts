@@ -5,7 +5,7 @@ const joiConfig = Joi.joiConfig;
 
 const Schema = {
 	user: {
-		login: {
+		signin: {
 			[Segments.BODY]: { email: joiConfig.email, password: joiConfig.password },
 		},
 		signup: {
