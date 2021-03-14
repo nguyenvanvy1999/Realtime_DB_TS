@@ -3,7 +3,7 @@ import { celebrate } from 'celebrate';
 
 const Celebrate = {
 	user: {
-		login: celebrate(Schema.user.login),
+		signin: celebrate(Schema.user.signin),
 		signup: celebrate(Schema.user.signup),
 		editProfile: celebrate(Schema.user.editProfile),
 		editPassword: celebrate(Schema.user.editPassword),

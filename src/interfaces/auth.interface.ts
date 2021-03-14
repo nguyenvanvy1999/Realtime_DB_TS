@@ -3,6 +3,7 @@ import { IUserDocument } from './user.interface';
 
 export interface DataStoredInToken {
 	_id: string;
+	email: string;
 }
 
 export interface TokenData {
@@ -12,4 +13,5 @@ export interface TokenData {
 
 export interface RequestWithUser extends Request {
 	user: IUserDocument;
+	authenticated: boolean;
 }

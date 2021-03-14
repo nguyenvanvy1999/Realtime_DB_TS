@@ -4,8 +4,8 @@ import Route from '../interfaces/route.interface';
 import multer from 'multer';
 import Celebrate from '../middlewares/validate.middleware';
 
-class UsersRoute implements Route {
-	public path = '/users';
+class UserRoute implements Route {
+	public path = '/user';
 	public router = Router();
 	constructor() {
 		this.initializeRoutes();
@@ -17,4 +17,4 @@ class UsersRoute implements Route {
 	}
 }
 
-export default new UsersRoute();
+export default new UserRoute();

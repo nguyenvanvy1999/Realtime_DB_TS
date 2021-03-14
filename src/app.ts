@@ -25,7 +25,7 @@ class App {
 		this.connectToDatabase();
 		this.initializeMiddlewares();
 		this.initializeRoutes(routes);
-		// this.initializeSwagger();
+		this.initializeSwagger();
 		this.initializeErrorHandling();
 	}
 	public listen() {
@@ -48,7 +48,6 @@ class App {
 			this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream }));
 			this.app.use(cors({ origin: true, credentials: true }));
 		}
-
 		this.app.use(hpp());
 		this.app.use(helmet());
 		this.app.use(compression());
@@ -58,23 +57,20 @@ class App {
 	}
 	private initializeRoutes(routes: Routes[]) {
 		routes.forEach((route) => {
-			this.app.use('/', route.router);
+			this.app.use(route.path, route.router);
+			// this.app.use('/', route.router);
 		});
 	}
-	// private initializeSwagger() {
-	// 	const options = {
-	// 		swaggerDefinition: {
-	// 			info: {
-	// 				title: 'REST API',
-	// 				version: '1.0.0',
-	// 				description: 'Example docs',
-	// 			},
-	// 		},
-	// 		apis: ['swagger.yaml'],
-	// 	};
-	// 	const specs = swaggerJSDoc(options);
-	// 	this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-	// }
+	private initializeSwagger() {
+		const options = {
+			swaggerDefinition: {
+				info: { title: 'REST API', version: '1.0.0', description: 'Nodejs Database built with typescript' },
+			},
+			apis: ['swagger.yaml'],
+		};
+		const specs = swaggerJSDoc(options);
+		this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+	}
 	private initializeErrorHandling() {
 		this.app.use(errorMiddleware);
 		this.app.use(handleNotFoundPage);
