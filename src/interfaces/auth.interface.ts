@@ -1,17 +1,17 @@
 import { Request } from 'express';
-import { IUserDocument } from './user.interface';
-
+import { UserDocument } from './user.interface';
 export interface DataStoredInToken {
 	_id: string;
 	email: string;
 }
 
-export interface TokenData {
-	token: string;
-	expiresIn: number;
+export interface Token {
+	data: DataStoredInToken;
+	iat: number;
+	exp: number;
 }
 
 export interface RequestWithUser extends Request {
-	user: IUserDocument;
+	user: UserDocument;
 	authenticated: boolean;
 }
