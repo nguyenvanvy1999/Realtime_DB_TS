@@ -3,6 +3,8 @@ import UsersController from '../controllers/user.controller';
 import Route from '../interfaces/route.interface';
 import multer from 'multer';
 import Celebrate from '../middlewares/validate.middleware';
+import userController from '../controllers/user.controller';
+import { celebrate } from 'celebrate';
 
 class UserRoute implements Route {
 	public path = '/user';
@@ -13,7 +15,13 @@ class UserRoute implements Route {
 
 	private initializeRoutes() {
 		this.router.use(multer().none());
-		this.router.post(`${this.path}/signup`, Celebrate.user.signup, UsersController.newUser);
+		this.router
+			.route(`${this.path}`)
+			.get(Celebrate.user.token, userController.userProfile)
+			.post(Celebrate.user.signup, userController.newUser)
+			.patch(Celebrate.user.editProfile, UsersController.editProfile)
+			.delete(Celebrate.user.token, userController.deleteUser);
+		this.router.post(`${this.path}/signin`, Celebrate.user.signin, userController.signIn);
 	}
 }
 

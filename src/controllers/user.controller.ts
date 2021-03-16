@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import UserService from '../services/user.service';
 import { RequestWithUser } from '../interfaces/auth.interface';
 import HttpException from '../exceptions/http';
+import { UserDocument } from '../interfaces/user.interface';
+import { returnToken } from '../utils/jwt';
 
 class UserController {
 	public async newUser(req: Request, res: Response, next: NextFunction) {
@@ -10,6 +12,21 @@ class UserController {
 			const user = UserService.newUser(req.body);
 			const result = await UserService.insert(user);
 			return res.status(200).send(result);
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	public async signIn(req: Request, res: Response, next: NextFunction) {
+		try {
+			const { email, password } = req.body;
+			const user = await User.findOne({ email });
+			if (!user) throw new HttpException(400, 'Email wrong');
+			const isPassword = user.comparePassword(password);
+			if (!isPassword) throw new HttpException(400, 'Password wrong');
+			if (!user.isActive) throw new HttpException(400, 'Please active account first');
+			const token = returnToken(user);
+			return res.status(200).send({ token });
 		} catch (error) {
 			next(error);
 		}
@@ -42,6 +59,15 @@ class UserController {
 			const { email } = req.user;
 			await User.findOneAndDelete({ email });
 			return res.status(200).send({ message: 'Delete account success' });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	public async userProfile(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			const user = req.user as UserDocument;
+			return res.status(200).send(user);
 		} catch (error) {
 			next(error);
 		}
