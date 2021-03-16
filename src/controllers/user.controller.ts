@@ -4,13 +4,18 @@ import UserService from '../services/user.service';
 import { RequestWithUser } from '../interfaces/auth.interface';
 import HttpException from '../exceptions/http';
 import { UserDocument } from '../interfaces/user.interface';
-import { returnToken } from '../utils/jwt';
+import { returnToken, generateToken } from '../utils/jwt';
+import Mail from '../utils/mail';
+import { jwtConfig } from '../configs/jwt';
 
 class UserController {
 	public async newUser(req: Request, res: Response, next: NextFunction) {
 		try {
 			const user = UserService.newUser(req.body);
 			const result = await UserService.insert(user);
+			const token = generateToken(result, jwtConfig.VERIFY, jwtConfig.LONG_TIME);
+			const config = Mail.verifyEmail(token, req);
+			await Mail.sendMail(config);
 			return res.status(200).send(result);
 		} catch (error) {
 			next(error);
@@ -39,6 +44,8 @@ class UserController {
 			if (user.comparePassword(password)) throw new HttpException(400, 'New password must be change');
 			const hashPassword = User.hashPassword(password);
 			await User.findOneAndUpdate({ email }, { password: hashPassword }, { new: true });
+			const config = Mail.resetPasswordMail(user);
+			await Mail.sendMail(config);
 			return res.status(200).send({ message: 'Update password success!' });
 		} catch (error) {
 			next(error);
@@ -68,6 +75,19 @@ class UserController {
 		try {
 			const user = req.user as UserDocument;
 			return res.status(200).send(user);
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	public async postForgotPassword(req: Request, res: Response, next: NextFunction) {
+		try {
+			const { email } = req.body;
+			const user = await User.findOne(email);
+			if (!user) throw new HttpException(400, 'No user found!');
+			const token = generateToken(user, jwtConfig.PASSWORD, jwtConfig.SHORT_TIME);
+			const config = Mail.forgotPasswordMail(token, req);
+			await Mail.sendMail(config);
 		} catch (error) {
 			next(error);
 		}
