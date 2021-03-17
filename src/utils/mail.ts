@@ -24,7 +24,7 @@ class Mail {
 			subject: 'Please verify your email address on DataCenter',
 			text: `Thank you for registering with DataCenter.\n\n
 	This verify your email address please click on the following link, or paste this into your browser:\n\n
-	http://${req.headers.host}/account/verify/${token}\n\n
+	http://${req.headers.host}/user/verify/${token}\n\n
 	\n\n
 	Thank you!`,
 		};
@@ -46,7 +46,7 @@ class Mail {
 			subject: 'Reset your password on DataCenter',
 			text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
 		Please click on the following link, or paste this into your browser to complete the process:\n\n
-		http://${req.headers.host}/reset/${token}\n\n
+		http://${req.headers.host}/user/reset/${token}\n\n
 		If you did not request this, please ignore this email and your password will remain unchanged.\n`,
 		};
 		return mailOptions;
