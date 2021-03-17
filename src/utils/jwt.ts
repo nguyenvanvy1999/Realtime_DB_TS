@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import HttpException from '../exceptions/http';
 import { jwtConfig } from '../configs/jwt';
-import { DataStoredInToken } from '../interfaces/auth.interface';
+import { DataStoredInToken, Token } from '../interfaces/auth.interface';
 export function generateToken(user: DataStoredInToken, secretSignature: string, tokenLife: any): string {
 	try {
 		const userData = { _id: user._id, email: user.email };
@@ -16,7 +16,7 @@ export function generateToken(user: DataStoredInToken, secretSignature: string, 
 
 export function verifyToken(token: string, secretKey: string) {
 	try {
-		return jwt.verify(token, secretKey);
+		return jwt.verify(token, secretKey) as Token;
 	} catch (error) {
 		throw new HttpException(400, error.message);
 	}

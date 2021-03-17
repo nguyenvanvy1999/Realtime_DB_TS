@@ -4,7 +4,7 @@ import UserService from '../services/user.service';
 import { RequestWithUser } from '../interfaces/auth.interface';
 import HttpException from '../exceptions/http';
 import { UserDocument } from '../interfaces/user.interface';
-import { returnToken, generateToken } from '../utils/jwt';
+import { returnToken, generateToken, verifyToken } from '../utils/jwt';
 import Mail from '../utils/mail';
 import { jwtConfig } from '../configs/jwt';
 
@@ -21,7 +21,21 @@ class UserController {
 			next(error);
 		}
 	}
-
+	public async verifyAccount(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			const { token } = req.params;
+			if (!token) throw new HttpException(400, 'No token');
+			const decoded = verifyToken(token, jwtConfig.VERIFY);
+			if (!decoded) throw new HttpException(400, 'Token verify error');
+			const user = await User.findById(decoded.data._id);
+			if (!user) throw new HttpException(400, 'No user found');
+			user.isActive = true;
+			await user.save();
+			return res.status(200).send({ message: 'Verify account success' });
+		} catch (error) {
+			next(error);
+		}
+	}
 	public async signIn(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { email, password } = req.body;
@@ -70,7 +84,6 @@ class UserController {
 			next(error);
 		}
 	}
-
 	public async userProfile(req: RequestWithUser, res: Response, next: NextFunction) {
 		try {
 			const user = req.user as UserDocument;
@@ -79,7 +92,6 @@ class UserController {
 			next(error);
 		}
 	}
-
 	public async postForgotPassword(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { email } = req.body;
@@ -88,6 +100,23 @@ class UserController {
 			const token = generateToken(user, jwtConfig.PASSWORD, jwtConfig.SHORT_TIME);
 			const config = Mail.forgotPasswordMail(token, req);
 			await Mail.sendMail(config);
+		} catch (error) {
+			next(error);
+		}
+	}
+	public async getForgotPassword(req: Request, res: Response, next: NextFunction) {
+		try {
+			const { token } = req.params;
+			let { password } = req.body;
+			if (!token) throw new HttpException(400, 'No token');
+			const decoded = verifyToken(token, jwtConfig.PASSWORD);
+			if (!decoded) throw new HttpException(400, 'Token verify error');
+			const user = await User.findById(decoded.data._id);
+			if (!user) throw new HttpException(400, 'No user found!');
+			password = User.hashPassword(password);
+			user.password = password;
+			await user.save();
+			return res.status(200).send({ message: 'Change password success !' });
 		} catch (error) {
 			next(error);
 		}
