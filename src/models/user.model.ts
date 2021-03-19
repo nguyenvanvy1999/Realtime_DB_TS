@@ -13,22 +13,28 @@ export interface IUser extends IUserDocument {
 export interface IUserModel extends Model<IUser> {
 	hashPassword(password: string): string;
 }
-
-const UserSchema: Schema = new Schema({
-	_id: Schema.Types.ObjectId,
-	email: { type: String, required: true, unique: true, lowercase: true },
-	firstName: { type: String, required: true },
-	lastName: { type: String, required: true },
-	gender: { type: String, enum: Object.values(Gender), default: Gender.undisclosed },
-	address: {
-		street: { type: String },
-		city: { type: String },
-		postCode: { type: String },
+const schemaOption = {
+	versionKey: false,
+	timestamps: true,
+};
+const UserSchema: Schema = new Schema(
+	{
+		_id: Schema.Types.ObjectId,
+		email: { type: String, required: true, unique: true, lowercase: true },
+		firstName: { type: String, required: true },
+		lastName: { type: String, required: true },
+		gender: { type: String, enum: Object.values(Gender), default: Gender.undisclosed },
+		address: {
+			street: { type: String },
+			city: { type: String },
+			postCode: { type: String },
+		},
+		password: { type: String, min: 4 },
+		isActive: { type: Boolean, default: false },
+		role: { type: String, enum: Object.values(Role), default: Role.user },
 	},
-	password: { type: String, min: 4 },
-	isActive: { type: Boolean, default: false },
-	role: { type: String, enum: Object.values(Role), default: Role.user },
-});
+	schemaOption
+);
 
 UserSchema.pre('save', async function (this: IUser, next) {
 	const user = this;

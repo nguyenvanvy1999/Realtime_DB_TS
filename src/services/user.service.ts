@@ -7,6 +7,7 @@ class UserService {
 	public newUser(user: NewUser): UserDocument {
 		try {
 			const newUser = {
+				_id: mongoose.Types.ObjectId(),
 				email: user.email,
 				firstName: user.firstName,
 				lastName: user.lastName,

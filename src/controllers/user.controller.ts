@@ -11,8 +11,11 @@ import { jwtConfig } from '../configs/jwt';
 class UserController {
 	public async newUser(req: Request, res: Response, next: NextFunction) {
 		try {
-			const user = UserService.newUser(req.body);
-			const result = await UserService.insert(user);
+			const { email } = req.body;
+			const user = await User.findOne({ email });
+			if (user) throw new HttpException(400, 'Email has been exist !');
+			const newUser = UserService.newUser(req.body);
+			const result = await UserService.insert(newUser);
 			const token = generateToken(result, jwtConfig.VERIFY, jwtConfig.LONG_TIME);
 			const config = Mail.verifyEmail(token, req);
 			await Mail.sendMail(config);
