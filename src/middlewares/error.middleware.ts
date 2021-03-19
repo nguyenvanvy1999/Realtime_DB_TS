@@ -4,11 +4,11 @@ import { logger } from '../utils/logger';
 
 const errorMiddleware = (error: HttpException, req: Request, res: Response, next: NextFunction) => {
 	try {
+		const name: string = error.name;
 		const status: number = error.status || 500;
 		const message: string = error.message || 'Something went wrong';
-
-		logger.error(`StatusCode : ${status}, Message : ${message}`);
-		res.status(status).json({ message });
+		logger.error(`StatusCode : ${status}, Message : ${name} ${message}`);
+		res.status(status).json({ name, message });
 	} catch (error) {
 		next(error);
 	}

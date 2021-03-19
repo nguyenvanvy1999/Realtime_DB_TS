@@ -47,6 +47,7 @@ class ConfigService {
 					.uri({ scheme: [/https?/] })
 					.required(),
 				DEBUG: joi.boolean().default(false),
+				TEST: joi.boolean().default(false),
 				MONGO_URI: joi
 					.string()
 					.regex(/^mongodb/)
@@ -87,7 +88,10 @@ class ConfigService {
 		return this.envConfig.NODE_ENV === env;
 	}
 	isDebug(): boolean {
-		return this.envConfig.DEBUG === 'true';
+		return this.envConfig.DEBUG.toString() === 'true'; // because before, debug and test set to boolean
+	}
+	isTest(): boolean {
+		return this.envConfig.TEST.toString() === 'true';
 	}
 }
 

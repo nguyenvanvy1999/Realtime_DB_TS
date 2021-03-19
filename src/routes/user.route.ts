@@ -3,29 +3,25 @@ import UserController from '../controllers/user.controller';
 import Route from '../interfaces/route.interface';
 import multer from 'multer';
 import Celebrate from '../middlewares/validate.middleware';
-
+import { authJWT, checkRole } from '../middlewares/auth.middleware';
 class UserRoute implements Route {
-	public path = '/user';
+	public path: string = '/user';
 	public router = Router();
 	constructor() {
 		this.initializeRoutes();
 	}
-
 	private initializeRoutes() {
 		this.router.use(multer().none());
 		this.router
-			.route(`${this.path}`)
-			.get(Celebrate.user.token, UserController.userProfile)
+			.route('/')
+			.get(Celebrate.user.token, authJWT, UserController.userProfile)
 			.post(Celebrate.user.signup, UserController.newUser)
-			.patch(Celebrate.user.editProfile, UserController.editProfile)
-			.delete(Celebrate.user.token, UserController.deleteUser);
-		this.router.post(`${this.path}/signin`, Celebrate.user.signin, UserController.signIn);
-		this.router.post(`${this.path}/verify/:token`, UserController.verifyAccount);
-		this.router
-			.route(`${this.path}/reset/:token`)
-			.post(UserController.postForgotPassword)
-			.get(UserController.getForgotPassword);
-		this.router.post(`${this.path}/password/`, UserController.editPassword);
+			.patch(Celebrate.user.editProfile, authJWT, UserController.editProfile)
+			.delete(Celebrate.user.token, authJWT, UserController.deleteUser);
+		this.router.post('/signin', Celebrate.user.signin, UserController.signIn);
+		this.router.post('/verify/:token', UserController.verifyAccount);
+		this.router.route('/reset/:token').post(UserController.postForgotPassword).get(UserController.getForgotPassword);
+		this.router.post('/password/', authJWT, UserController.editPassword);
 	}
 }
 
