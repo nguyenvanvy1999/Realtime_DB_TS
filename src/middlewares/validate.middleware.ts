@@ -10,7 +10,6 @@ const Celebrate = {
 		verifyAccount: celebrate(Schema.user.verifyAccount),
 		postForgotPassword: celebrate(Schema.user.postForgotPassword),
 		getForgetPassword: celebrate(Schema.user.getForgotPassword),
-		token: celebrate(Schema.user.token),
 		search: celebrate(Schema.user.search),
 	},
 	device: {

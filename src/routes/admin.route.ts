@@ -15,6 +15,7 @@ class AdminRoute implements Route {
 		this.router.use(authJWT, checkRole);
 		this.router.post('/clear', AdminController.cleanUser);
 		this.router.get('/users', AdminController.getAllUser);
+		this.router.get('/user', AdminController.getUser);
 		this.router.get('/disable', AdminController.unActiveAccount);
 		this.router.get('/delete', AdminController.deleteAccountAdmin);
 	}

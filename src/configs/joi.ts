@@ -15,7 +15,7 @@ class Joi {
 			if (!isValid(value)) return { value, errors: helpers.error('invalid') };
 		},
 	});
-	private joiJWT = joi.extend({
+	public joiJWT = joi.extend({
 		type: 'jwt',
 		messages: {
 			invalid: 'It must have a valid JWT',

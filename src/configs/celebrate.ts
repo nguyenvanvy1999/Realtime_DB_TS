@@ -23,18 +23,15 @@ const Schema = {
 			},
 		},
 		search: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.PARAMS]: {},
 		},
 		editProfile: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				firstName: joiConfig.string,
 				lastName: joiConfig.string,
 			},
 		},
 		editPassword: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				password: joiConfig.password,
 				confirmPassword: joi.string().valid(joi.ref('password')).required(),
@@ -53,13 +50,9 @@ const Schema = {
 				confirmPassword: joi.string().valid(joi.ref('password')).required(),
 			},
 		},
-		token: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
-		},
 	},
 	device: {
 		getDevice: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				type: joiConfig.string,
 				model: joiConfig.string,
@@ -68,13 +61,11 @@ const Schema = {
 			},
 		},
 		deviceID: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.QUERY]: { deviceID: joiConfig._id },
 		},
 	},
 	zone: {
 		newZone: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				description: joiConfig.string,
 				name: joiConfig.string,
@@ -82,14 +73,12 @@ const Schema = {
 			},
 		},
 		one: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				zoneID: joiConfig._id,
 				deviceID: joiConfig._id,
 			},
 		},
 		many: {
-			[Segments.HEADERS]: joi.object({ token: joiConfig.token }).unknown(),
 			[Segments.BODY]: {
 				zoneID: joiConfig._id.required(),
 				devicesID: joi.array().items(joiConfig._id.required()),
