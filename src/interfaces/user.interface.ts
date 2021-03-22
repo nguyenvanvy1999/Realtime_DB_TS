@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { IAddressDocument } from './address.interface';
+
 export enum Gender {
 	male = 'male',
 	female = 'female',
@@ -9,30 +9,17 @@ export enum Role {
 	user = 'User',
 	admin = 'Admin',
 }
-export interface SignIn {
-	email: string;
-	password: string;
-}
-export interface NewUser extends SignIn {
-	firstName: string;
-	lastName: string;
-	gender: Gender;
-	address?: IAddressDocument;
-}
 
-export interface UserDocument extends NewUser {
-	isActive: boolean;
-	role: Role;
-}
+type Address = {
+	street: string;
+	city: string;
+	postCode: string;
+};
 
-export interface IUserDocument extends Document {
-	_id: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-	gender: Gender;
-	address?: IAddressDocument;
-	password: string;
-	isActive: boolean;
-	role: Role;
-}
+export type SignIn = { email: string; password: string };
+
+export type NewUser = SignIn & { firstName: string; lastName: string; gender: Gender; address?: Address };
+
+export type UserDocument = NewUser & { isActive: boolean; role: Role };
+
+export interface IUserDocument extends Document, UserDocument {}
