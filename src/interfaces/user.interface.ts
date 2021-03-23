@@ -22,4 +22,6 @@ export type NewUser = SignIn & { firstName: string; lastName: string; gender: Ge
 
 export type UserDocument = NewUser & { isActive: boolean; role: Role };
 
-export interface IUserDocument extends Document, UserDocument {}
+export interface IUserDocument extends Document, UserDocument {
+	_id: string;
+}

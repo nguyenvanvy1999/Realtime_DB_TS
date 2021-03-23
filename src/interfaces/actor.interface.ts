@@ -6,8 +6,7 @@ export enum ActorGender {
 }
 
 export type ActorDocument = {
-	firstName: string;
-	lastName: string;
+	name: string;
 	gender: ActorGender;
 	nation: string;
 	Dob: Date;
@@ -15,4 +14,6 @@ export type ActorDocument = {
 	films: string[];
 };
 
-export interface IActorDocument extends Document, ActorDocument {}
+export interface IActorDocument extends Document, ActorDocument {
+	_id: string;
+}

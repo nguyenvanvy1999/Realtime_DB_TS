@@ -4,11 +4,11 @@ import { IActorDocument } from '../interfaces/actor.interface';
 import Actor from './actor.model';
 import { schemaOption } from './user.model';
 
-export interface IFilm extends IFilmDocument {
+interface IFilm extends IFilmDocument {
 	getActor(): Promise<IActorDocument[]>;
 }
 
-export interface IFilmModel extends Model<IFilm> {
+interface IFilmModel extends Model<IFilm> {
 	// statics here
 }
 
