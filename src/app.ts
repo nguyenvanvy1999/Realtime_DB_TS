@@ -12,6 +12,8 @@ import Config from './configs/index';
 import { errorMiddleware, handleNotFoundPage } from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
 import Mongo from './configs/mongo';
+import path from 'path';
+import favicon from 'serve-favicon';
 
 class App {
 	public app: express.Application;
@@ -48,6 +50,8 @@ class App {
 			this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream }));
 			this.app.use(cors({ origin: true, credentials: true }));
 		}
+		this.app.use(express.static(path.join(__dirname, '../public')));
+		this.app.use(favicon(path.join(__dirname, '../public/favicon.ico')));
 		this.app.use(hpp());
 		this.app.use(helmet());
 		this.app.use(compression());

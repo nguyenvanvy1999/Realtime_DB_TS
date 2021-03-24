@@ -10,7 +10,7 @@ interface IActor extends IActorDocument {
 
 interface IActorModel extends Model<IActor> {
 	// statics here. it's required
-	getActorByAge(): Promise<IActorDocument[]>;
+	getActorByAge(age: number): Promise<IActorDocument[]>;
 }
 
 const ActorSchema: Schema = new Schema(

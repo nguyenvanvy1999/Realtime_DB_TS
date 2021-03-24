@@ -5,3 +5,6 @@ test.js
 .env
 .VSCodeCounter/
 data/
+.vs/
+*.mp4
+*.mp3
