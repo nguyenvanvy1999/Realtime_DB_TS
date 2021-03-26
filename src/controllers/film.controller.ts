@@ -3,11 +3,16 @@ import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import path from 'path';
 import HttpException from '../exceptions/http';
+import Config from '../configs/index';
+import { RequestWithUser } from '../interfaces/auth.interface';
+import { uploadUtil } from '../utils/upload';
 
 class FilmController {
 	public async getFilm(req: Request, res: Response, next: NextFunction) {
 		try {
-			return res.status(200).send({});
+			const { name } = req.params;
+			const film = await Film.find({ name: { $regex: name } });
+			return res.status(200).send({ film });
 		} catch (error) {
 			next(error);
 		}
@@ -21,7 +26,9 @@ class FilmController {
 	}
 	public async deleteFilm(req: Request, res: Response, next: NextFunction) {
 		try {
-			return res.status(200).send({});
+			const { name } = req.params;
+			await Film.findOneAndDelete({ name });
+			return res.status(200).send({ message: 'Delete film success! ' });
 		} catch (error) {
 			next(error);
 		}
@@ -60,6 +67,33 @@ class FilmController {
 				res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
 				fs.createReadStream(videoPath).pipe(res);
 			}
+		} catch (error) {
+			next(error);
+		}
+	}
+	public async downloadFilm(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			const { email } = req.user;
+			const { name } = req.body;
+			const dir = `${Config.get('path')}${email}/${name}`;
+			if (!fs.existsSync(dir)) throw new HttpException(400, 'No such file or directory');
+			res.download(dir, name);
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	public async uploadFilm(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			await uploadUtil(req, res);
+			if (req.files.length <= 0) throw new HttpException(400, 'Please choose a file or check your file type');
+			const user = req.user;
+			const files = req.files;
+			// const data = DataService.newFileData(user, files);
+			// await DataService.insert(data);
+			return res.status(200).send({
+				message: 'Uploaded files successfully ',
+			});
 		} catch (error) {
 			next(error);
 		}

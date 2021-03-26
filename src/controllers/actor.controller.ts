@@ -29,7 +29,9 @@ class ActorController {
 	}
 	public async deleteActor(req: Request, res: Response, next: NextFunction) {
 		try {
-			return res.status(200).send({});
+			const { name } = req.params;
+			await Actor.findOneAndDelete({ name });
+			return res.status(200).send({ message: 'Delete actor success!' });
 		} catch (error) {
 			next(error);
 		}
