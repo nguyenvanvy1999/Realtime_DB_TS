@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
 import { IActorDocument, ActorGender } from '../interfaces/actor.interface';
 import { schemaOption } from './user.model';
-import { getAge } from '../utils/age';
+import { getAge } from '../utils/time';
 
 interface IActor extends IActorDocument {
 	// methods here

@@ -1,10 +1,8 @@
 import path from 'path';
-import multer from 'multer';
 import HttpException from '../exceptions/http';
 import fs from 'fs';
-import { getTime } from '../utils/age';
-import { RequestWithUser } from '../interfaces/auth.interface';
-import { FileFilterCallback } from 'multer';
+import { getTime } from '../utils/time';
+import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
 
 class MulterConfig {
