@@ -1,0 +1,3 @@
+bcrypt @types/bcrypt celebrate compression cookie-parser cors dotenv helmet express-session joi jsonwebtoken morgan multer nodemailer nodemailer-sendgrid serve-favicon swagger-jsdoc swagger-ui-express winston winston-daily-rotate-file
+
+@types/compression @types/cookie-parser @types/bcrypt @types/cors @types/hpp @types/jest @types/jsonwebtoken @types/morgan @types/multer @types/node @types/nodemailer @types/nodemailer-sendgrid @types/serve-favicon @types/swagger-jsdoc @types/swagger-ui-express jest nodemon supertest ts-jest ts-node tslint typescript
